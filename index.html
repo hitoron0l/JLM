@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Will you be my Valentine?</title>
+  <title>Sup</title>
 
   <!-- Confetti library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -69,6 +69,33 @@
       width: 140px;
       max-width: 40vw;
       margin: 0;
+    }
+
+    .lock-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .lock-row input {
+      padding: 14px 18px;
+      font-size: 18px;
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      width: 200px;
+    }
+
+    .lock-row button {
+      position: static;
+      transform: none;
+      padding: 14px 22px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 999px;
+      background: var(--yes);
+      color: #fff;
     }
 
     h1 {
@@ -147,19 +174,17 @@
   <canvas id="confettiCanvas"></canvas>
 
 <div class="card" id="lockScreen">
-  <h1>Enter password</h1>
-  <input
-    id="passwordInput"
-    type="password"
-    placeholder="Password"
-    style="padding:14px 18px; font-size:18px; border-radius:999px; border:1px solid #ccc; width:80%; max-width:280px;"
-  />
-  <br /><br />
-  <button id="unlockBtn" style="background:var(--yes); color:#fff;">
-    Enter
-  </button>
+  <h1>What’s your birthday?</h1>
+  <div class="lock-row">
+    <input
+      id="passwordInput"
+      type="password"
+      placeholder="MMDD"
+    />
+    <button id="unlockBtn">Enter</button>
+  </div>
   <div class="hint" id="errorMsg" style="display:none; color:#c02626;">
-    Incorrect password
+    Huh..
   </div>
 </div>
 
@@ -323,6 +348,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
