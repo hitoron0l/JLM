@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GE6EZ4BGZG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GE6EZ4BGZG');
+</script>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Sup</title>
@@ -333,7 +343,14 @@ const unlockBtn = document.getElementById("unlockBtn");
 const errorMsg = document.getElementById("errorMsg");
 
 unlockBtn.addEventListener("click", () => {
-  if (passwordInput.value === correctPassword) {
+  if (passwordInput.value.trim() === correctPassword) {
+
+    //Log successful unlock to Google Analytics
+    gtag('event', 'unlock_success', {
+      event_category: 'engagement',
+      event_label: 'birthday_correct'
+    });
+
     lockScreen.style.display = "none";
     mainContent.style.display = "block";
   } else {
@@ -348,6 +365,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
