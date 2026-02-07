@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GE6EZ4BGZG"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-GE6EZ4BGZG');
-  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GE6EZ4BGZG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-GE6EZ4BGZG');
+</script>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Sup</title>
@@ -19,7 +20,7 @@
 
   <style>
     :root {
-      --bg1: #d0c7f9;
+       --bg1: #d0c7f9;
       --bg2: #defcde;
       --card: #ffffffcc;
       --yes: #693bff;
@@ -39,6 +40,7 @@
       padding: 16px;
     }
 
+    /* FULL-SCREEN CONFETTI CANVAS */
     #confettiCanvas {
       position: fixed;
       inset: 0;
@@ -62,6 +64,48 @@
       width: min(260px, 80vw);
       margin: 0 auto 10px;
       display: block;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
+    }
+
+    .art-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .art-row .art {
+      width: 140px;
+      max-width: 40vw;
+      margin: 0;
+    }
+
+    .lock-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .lock-row input {
+      padding: 14px 18px;
+      font-size: 18px;
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      width: 200px;
+    }
+
+    .lock-row button {
+      position: static;
+      transform: none;
+      padding: 14px 22px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 999px;
+      background: var(--yes);
+      color: #fff;
     }
 
     h1 {
@@ -98,6 +142,7 @@
       background: var(--yes);
       color: #fff;
     }
+    #yesBtn:hover { background: var(--yesHover); }
 
     #noBtn {
       left: 62%;
@@ -114,6 +159,12 @@
     .result {
       display: none;
       margin-top: 18px;
+      animation: pop .35s ease;
+    }
+
+    .result h2 {
+      font-size: clamp(30px, 4.5vw, 46px);
+      margin: 10px 0;
     }
 
     .fireworks {
@@ -121,15 +172,40 @@
       margin: 0 auto;
       display: block;
     }
+
+    @keyframes pop {
+      from { transform: scale(.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
   </style>
 </head>
 
 <body>
   <canvas id="confettiCanvas"></canvas>
 
-  <main class="card" id="mainContent">
-    <img class="art" src="bison.png" alt="Bison" />
-    <img class="art" src="orca.png" alt="Orca" />
+<div class="card" id="lockScreen">
+  <h1>What’s your birthday?</h1>
+  <div class="lock-row">
+    <input
+      id="passwordInput"
+      type="password"
+      placeholder="MMDD"
+    />
+    <button id="unlockBtn">Enter</button>
+  </div>
+  <div class="hint" id="errorMsg" style="display:none; color:#c02626;">
+    Huh..
+  </div>
+</div>
+
+
+  
+  <main class="card" id="mainContent" style="display:none;">
+    <!-- ANIMAL WITH HEART -->
+<div class="art-row">
+  <img class="art" src="bison.png" alt="Bison" />
+  <img class="art" src="orca.png" alt="Orca with heart balloon" />
+</div>
 
     <h1>Joe, will you be my valentine?</h1>
 
@@ -138,11 +214,16 @@
       <button id="noBtn">Probably Not</button>
     </section>
 
+    <!-- HINT -->
     <div class="hint" id="hint">“Probably Not” seems a bit indirect 😈</div>
 
     <section class="result" id="result">
       <h2>YAY! 🎉</h2>
-      <img class="fireworks" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" />
+      <img
+        class="fireworks"
+        src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+        alt="Fireworks"
+      />
     </section>
   </main>
 
@@ -153,19 +234,63 @@
     const result = document.getElementById("result");
     const hint = document.getElementById("hint");
 
-    /* YES button grows */
+    /* ---------- CONFETTI ---------- */
+    const confettiCanvas = document.getElementById("confettiCanvas");
+
+    function resizeConfettiCanvas() {
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      confettiCanvas.width = Math.floor(window.innerWidth * dpr);
+      confettiCanvas.height = Math.floor(window.innerHeight * dpr);
+      confettiCanvas.style.width = "100vw";
+      confettiCanvas.style.height = "100vh";
+    }
+
+    resizeConfettiCanvas();
+    window.addEventListener("resize", resizeConfettiCanvas);
+    window.addEventListener("orientationchange", () => setTimeout(resizeConfettiCanvas, 150));
+
+    const confettiInstance = confetti.create(confettiCanvas, {
+      resize: false,
+      useWorker: true
+    });
+
+    function fullScreenConfetti() {
+      const end = Date.now() + 1600;
+
+      (function frame() {
+        confettiInstance({
+          particleCount: 12,
+          spread: 90,
+          startVelocity: 45,
+          ticks: 180,
+          origin: { x: Math.random(), y: Math.random() * 0.3 }
+        });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+
+      setTimeout(() => {
+        confettiInstance({
+          particleCount: 300,
+          spread: 140,
+          startVelocity: 60,
+          ticks: 220,
+          origin: { x: 0.5, y: 0.55 }
+        });
+      }, 300);
+    }
+
+    /* ---------- YES BUTTON GROWS ---------- */
     let yesScale = 1;
     function growYes() {
       yesScale = Math.min(2.2, yesScale + 0.1);
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
-    /* Clamp helper */
+    /* ---------- NO BUTTON RUNS AWAY ---------- */
     function clamp(n, min, max) {
       return Math.max(min, Math.min(max, n));
     }
 
-    /* DESKTOP hover logic (original) */
     function moveNo(px, py) {
       const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
@@ -184,6 +309,7 @@
 
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
+      noBtn.style.transform = "none";
 
       growYes();
     }
@@ -197,33 +323,58 @@
       if (d < 140) moveNo(e.clientX, e.clientY);
     });
 
-    /* MOBILE FIX (FIRST WORKING VERSION) */
-    function jumpNoRandomly() {
-      const z = zone.getBoundingClientRect();
-      const b = noBtn.getBoundingClientRect();
-
-      const newLeft = Math.random() * (z.width - b.width);
-      const newTop  = Math.random() * (z.height - b.height);
-
-      noBtn.style.left = newLeft + "px";
-      noBtn.style.top  = newTop + "px";
-
-      growYes();
-    }
-
-    noBtn.addEventListener("touchstart", e => {
-      e.preventDefault();
-      jumpNoRandomly();
-    }, { passive: false });
-
     noBtn.addEventListener("click", e => e.preventDefault());
 
-    /* YES CLICK */
+    /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
       zone.style.display = "none";
-      hint.style.display = "none";
+      hint.style.display = "none";     // HIDE THE HINT
       result.style.display = "block";
+      resizeConfettiCanvas();
+      fullScreenConfetti();
     });
+
+const correctPassword = "0619";
+
+const lockScreen = document.getElementById("lockScreen");
+const mainContent = document.getElementById("mainContent");
+const passwordInput = document.getElementById("passwordInput");
+const unlockBtn = document.getElementById("unlockBtn");
+const errorMsg = document.getElementById("errorMsg");
+
+unlockBtn.addEventListener("click", () => {
+  if (passwordInput.value.trim() === correctPassword) {
+
+    //Log successful unlock to Google Analytics
+    gtag('event', 'unlock_success', {
+      event_category: 'engagement',
+      event_label: 'birthday_correct'
+    });
+
+    lockScreen.style.display = "none";
+    mainContent.style.display = "block";
+  } else {
+    errorMsg.style.display = "block";
+  }
+});
+
+passwordInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") unlockBtn.click();
+});
+    
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
