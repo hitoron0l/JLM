@@ -193,7 +193,7 @@
     <input
       id="passwordInput"
       type="password"
-      placeholder="MMDD"
+      placeholder="MMDDYY"
     />
     <button id="unlockBtn">Enter</button>
   </div>
@@ -290,22 +290,47 @@
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
+    function getMobileBounds() {
+      const rect = zone.getBoundingClientRect();
+    
+      const safeTop = Math.max(120, rect.top - 120);
+      const safeBottom = Math.min(
+        window.innerHeight - 100,
+        rect.bottom + 200
+      );
+    
+      const safeLeft = 16;
+      const safeRight = window.innerWidth - 16;
+    
+      return {
+        minX: safeLeft,
+        maxX: safeRight,
+        minY: safeTop,
+        maxY: safeBottom
+      };
+    }
+    let escapeCount = 0;
+
     function jumpNoRandomly() {
       const b = noBtn.getBoundingClientRect();
+      const bounds = getMobileBounds();
     
-      // Switch to viewport-based positioning AFTER first interaction
-      noBtn.style.position = "fixed";
+      escapeCount++;
     
-      const padding = 24;
+      const maxX = bounds.maxX - b.width;
+      const maxY = bounds.maxY - b.height;
     
-      const maxX = window.innerWidth - b.width - padding;
-      const maxY = window.innerHeight - b.height - padding;
+      const minX = bounds.minX;
+      const minY = bounds.minY;
     
-      const newLeft = Math.random() * maxX;
-      const newTop  = Math.random() * maxY;
+      const newLeft =
+        minX + Math.random() * (maxX - minX);
     
-      noBtn.style.left = Math.max(padding, newLeft) + "px";
-      noBtn.style.top  = Math.max(padding, newTop) + "px";
+      const newTop =
+        minY + Math.random() * (maxY - minY);
+    
+      noBtn.style.left = newLeft + "px";
+      noBtn.style.top = newTop + "px";
       noBtn.style.transform = "none";
     
       growYes();
@@ -343,15 +368,17 @@
 
       growYes();
     }
-
-    zone.addEventListener("pointermove", e => {
-      const b = noBtn.getBoundingClientRect();
-      const d = Math.hypot(
-        (b.left + b.width / 2) - e.clientX,
-        (b.top + b.height / 2) - e.clientY
-      );
-      if (d < 140) moveNo(e.clientX, e.clientY);
-    });
+    
+    if (window.matchMedia("(hover: hover)").matches) {
+      zone.addEventListener("pointermove", e => {
+        const b = noBtn.getBoundingClientRect();
+        const d = Math.hypot(
+          (b.left + b.width / 2) - e.clientX,
+          (b.top + b.height / 2) - e.clientY
+        );
+        if (d < 140) moveNo(e.clientX, e.clientY);
+      });
+    }
 
     noBtn.addEventListener("click", e => e.preventDefault());
 
@@ -371,7 +398,7 @@
       fullScreenConfetti();
     });
 
-const correctPassword = "0619";
+const correctPassword = "061981";
 
 const lockScreen = document.getElementById("lockScreen");
 const mainContent = document.getElementById("mainContent");
@@ -402,6 +429,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
