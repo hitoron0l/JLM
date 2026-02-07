@@ -137,6 +137,10 @@
       transition: transform .12s ease, background .12s ease;
     }
 
+    #noBtn {
+      position: absolute;
+    }
+
     #yesBtn {
       left: 18%;
       background: var(--yes);
@@ -286,14 +290,64 @@
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
-    /* ---------- NO BUTTON RUNS AWAY ---------- */
+    function getMobileBounds() {
+      const rect = zone.getBoundingClientRect();
+    
+      const safeTop = Math.max(120, rect.top - 120);
+      const safeBottom = Math.min(
+        window.innerHeight - 100,
+        rect.bottom + 200
+      );
+    
+      const safeLeft = 16;
+      const safeRight = window.innerWidth - 16;
+    
+      return {
+        minX: safeLeft,
+        maxX: safeRight,
+        minY: safeTop,
+        maxY: safeBottom
+      };
+    }
+    let escapeCount = 0;
 
+    function jumpNoRandomly() {
+      const b = noBtn.getBoundingClientRect();
+      const bounds = getMobileBounds();
+    
+      escapeCount++;
+    
+      const maxX = bounds.maxX - b.width;
+      const maxY = bounds.maxY - b.height;
+    
+      const minX = bounds.minX;
+      const minY = bounds.minY;
+    
+      const newLeft =
+        minX + Math.random() * (maxX - minX);
+    
+      const newTop =
+        minY + Math.random() * (maxY - minY);
+    
+      noBtn.style.left = newLeft + "px";
+      noBtn.style.top = newTop + "px";
+      noBtn.style.transform = "none";
+    
+      growYes();
+    }
+
+    /* ---------- NO BUTTON RUNS AWAY ---------- */
     function clamp(n, min, max) {
-          return Math.max(min, Math.min(max, n));
+      return Math.max(min, Math.min(max, n));
     }
 
     function moveNo(px, py) {
-      const z = zone.getBoundingClientRect();
+      const z = {
+        left: 24,
+        top: 24,
+        width: window.innerWidth - 48,
+        height: window.innerHeight - 48
+      };
       const b = noBtn.getBoundingClientRect();
 
       let dx = (b.left + b.width / 2) - px;
@@ -314,6 +368,24 @@
 
       growYes();
     }
+    
+    if (window.matchMedia("(hover: hover)").matches) {
+      zone.addEventListener("pointermove", e => {
+        const b = noBtn.getBoundingClientRect();
+        const d = Math.hypot(
+          (b.left + b.width / 2) - e.clientX,
+          (b.top + b.height / 2) - e.clientY
+        );
+        if (d < 140) moveNo(e.clientX, e.clientY);
+      });
+    }
+
+    noBtn.addEventListener("click", e => e.preventDefault());
+
+    noBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      jumpNoRandomly();
+    }, { passive: false });
 
     noBtn.addEventListener("touchend", e => e.preventDefault());
 
@@ -357,13 +429,6 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
 
 
 
