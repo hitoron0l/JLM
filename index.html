@@ -298,16 +298,16 @@
       const card = mainContent.getBoundingClientRect();
       const btn = noBtn.getBoundingClientRect();
     
-      // HARD CODED PADDING INSIDE THE WHITE CARD
+      // Padding INSIDE the white card
       const paddingX = 24;
-      const paddingTop = 120;   // below images + question
-      const paddingBottom = 32; // above bottom edge
+      const paddingTop = 120;    // below images + question
+      const paddingBottom = 32;  // above card bottom
     
-      const maxX = card.width - btn.width - paddingX;
       const minX = paddingX;
+      const maxX = card.width - btn.width - paddingX;
     
-      const maxY = card.height - btn.height - paddingBottom;
       const minY = paddingTop;
+      const maxY = card.height - btn.height - paddingBottom;
     
       const newLeft = minX + Math.random() * (maxX - minX);
       const newTop  = minY + Math.random() * (maxY - minY);
@@ -373,6 +373,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
