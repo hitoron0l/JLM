@@ -137,14 +137,6 @@
       transition: transform .12s ease, background .12s ease;
     }
 
-    #mainContent {
-      position: relative;
-    } 
-    
-    #noBtn {
-      position: absolute;
-    }
-
     #yesBtn {
       left: 18%;
       background: var(--yes);
@@ -294,42 +286,34 @@
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
-    function jumpNoRandomly() {
-      const card = mainContent.getBoundingClientRect();
-      const btn = noBtn.getBoundingClientRect();
-    
-      // Padding INSIDE the white card
-      const paddingX = 24;
-      const paddingTop = 120;    // below images + question
-      const paddingBottom = 32;  // above card bottom
-    
-      const minX = paddingX;
-      const maxX = card.width - btn.width - paddingX;
-    
-      const minY = paddingTop;
-      const maxY = card.height - btn.height - paddingBottom;
-    
-      const newLeft = minX + Math.random() * (maxX - minX);
-      const newTop  = minY + Math.random() * (maxY - minY);
-    
-      noBtn.style.left = newLeft + "px";
-      noBtn.style.top  = newTop + "px";
-      noBtn.style.transform = "none";
-    
-      growYes();
+    /* ---------- NO BUTTON RUNS AWAY ---------- */
+
+    function clamp(n, min, max) {
+          return Math.max(min, Math.min(max, n));
     }
 
-    /* ---------- NO BUTTON RUNS AWAY ---------- */
-  
+    function moveNo(px, py) {
+      const z = zone.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
 
-    
+      let dx = (b.left + b.width / 2) - px;
+      let dy = (b.top + b.height / 2) - py;
+      let mag = Math.hypot(dx, dy) || 1;
+      dx /= mag;
+      dy /= mag;
 
-    noBtn.addEventListener("click", e => e.preventDefault());
+      let newLeft = (b.left - z.left) + dx * 150;
+      let newTop  = (b.top - z.top) + dy * 150;
 
-    noBtn.addEventListener("touchstart", e => {
-      e.preventDefault();
-      jumpNoRandomly();
-    }, { passive: false });
+      newLeft = clamp(newLeft, 0, z.width - b.width);
+      newTop  = clamp(newTop, 0, z.height - b.height);
+
+      noBtn.style.left = newLeft + "px";
+      noBtn.style.top = newTop + "px";
+      noBtn.style.transform = "none";
+
+      growYes();
+    }
 
     noBtn.addEventListener("touchend", e => e.preventDefault());
 
@@ -373,6 +357,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
