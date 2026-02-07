@@ -296,19 +296,27 @@
 
     function jumpNoRandomly() {
       const card = mainContent.getBoundingClientRect();
-      const b = noBtn.getBoundingClientRect();
+      const btn = noBtn.getBoundingClientRect();
     
-      const minX = 24;
-      const maxX = card.width - b.width - 24;
+      // HARD CODED PADDING INSIDE THE WHITE CARD
+      const paddingX = 24;
+      const paddingTop = 120;   // below images + question
+      const paddingBottom = 32; // above bottom edge
     
-      const minY = 120;
-      const maxY = card.height - b.height - 40;
+      const maxX = card.width - btn.width - paddingX;
+      const minX = paddingX;
+    
+      const maxY = card.height - btn.height - paddingBottom;
+      const minY = paddingTop;
     
       const newLeft = minX + Math.random() * (maxX - minX);
       const newTop  = minY + Math.random() * (maxY - minY);
     
       noBtn.style.left = newLeft + "px";
       noBtn.style.top  = newTop + "px";
+      noBtn.style.transform = "none";
+    
+      growYes();
     }
 
     /* ---------- NO BUTTON RUNS AWAY ---------- */
@@ -365,6 +373,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
