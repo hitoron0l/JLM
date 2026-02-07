@@ -57,6 +57,20 @@
       filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
     }
 
+    .art-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .art-row .art {
+      width: 140px;
+      max-width: 40vw;
+      margin: 0;
+    }
+
     h1 {
       font-size: clamp(26px, 4vw, 44px);
       margin: 12px 0 18px;
@@ -153,8 +167,10 @@
   
   <main class="card" id="mainContent" style="display:none;">
     <!-- ANIMAL WITH HEART -->
-<img class="art" src="bison.png" alt="Bison" />
-<img class="art" src="orca.png" alt="Orca with heart balloon" />
+<div class="art-row">
+  <img class="art" src="bison.png" alt="Bison" />
+  <img class="art" src="orca.png" alt="Orca with heart balloon" />
+</div>
 
     <h1>Joe, will you be my valentine?</h1>
 
@@ -307,6 +323,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
