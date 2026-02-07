@@ -58,6 +58,12 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.15);
     }
 
+    .art {
+      width: min(260px, 80vw);
+      margin: 0 auto 10px;
+      display: block;
+    }
+
     h1 {
       font-size: clamp(26px, 4vw, 44px);
       margin: 12px 0 18px;
@@ -109,24 +115,34 @@
       display: none;
       margin-top: 18px;
     }
+
+    .fireworks {
+      width: min(380px, 90vw);
+      margin: 0 auto;
+      display: block;
+    }
   </style>
 </head>
 
 <body>
   <canvas id="confettiCanvas"></canvas>
 
-  <main class="card">
-    <h1>Joe, will you be my Valentine?</h1>
+  <main class="card" id="mainContent">
+    <img class="art" src="bison.png" alt="Bison" />
+    <img class="art" src="orca.png" alt="Orca" />
+
+    <h1>Joe, will you be my valentine?</h1>
 
     <section class="button-zone" id="zone">
       <button id="yesBtn">Yes</button>
       <button id="noBtn">Probably Not</button>
     </section>
 
-    <div class="hint" id="hint">“Probably Not” seems a bit shy 😈</div>
+    <div class="hint" id="hint">“Probably Not” seems a bit indirect 😈</div>
 
     <section class="result" id="result">
       <h2>YAY! 🎉</h2>
+      <img class="fireworks" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" />
     </section>
   </main>
 
@@ -137,27 +153,19 @@
     const result = document.getElementById("result");
     const hint = document.getElementById("hint");
 
-    /* ---------- CONFETTI ---------- */
-    const confettiCanvas = document.getElementById("confettiCanvas");
-    const confettiInstance = confetti.create(confettiCanvas, { resize: true });
-
-    function fullScreenConfetti() {
-      confettiInstance({ particleCount: 250, spread: 140 });
-    }
-
-    /* ---------- YES BUTTON GROWS ---------- */
+    /* YES button grows */
     let yesScale = 1;
     function growYes() {
       yesScale = Math.min(2.2, yesScale + 0.1);
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
-    /* ---------- ORIGINAL SAFE NO-BUTTON LOGIC ---------- */
-
+    /* Clamp helper */
     function clamp(n, min, max) {
       return Math.max(min, Math.min(max, n));
     }
 
+    /* DESKTOP hover logic (original) */
     function moveNo(px, py) {
       const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
@@ -176,12 +184,10 @@
 
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
-      noBtn.style.transform = "none";
 
       growYes();
     }
 
-    // Desktop hover behavior
     zone.addEventListener("pointermove", e => {
       const b = noBtn.getBoundingClientRect();
       const d = Math.hypot(
@@ -191,7 +197,7 @@
       if (d < 140) moveNo(e.clientX, e.clientY);
     });
 
-    // Mobile touch behavior (first working fix)
+    /* MOBILE FIX (FIRST WORKING VERSION) */
     function jumpNoRandomly() {
       const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
@@ -200,8 +206,7 @@
       const newTop  = Math.random() * (z.height - b.height);
 
       noBtn.style.left = newLeft + "px";
-      noBtn.style.top = newTop + "px";
-      noBtn.style.transform = "none";
+      noBtn.style.top  = newTop + "px";
 
       growYes();
     }
@@ -213,12 +218,11 @@
 
     noBtn.addEventListener("click", e => e.preventDefault());
 
-    /* ---------- YES CLICK ---------- */
+    /* YES CLICK */
     yesBtn.addEventListener("click", () => {
       zone.style.display = "none";
       hint.style.display = "none";
       result.style.display = "block";
-      fullScreenConfetti();
     });
   </script>
 </body>
