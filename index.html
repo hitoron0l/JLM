@@ -9,6 +9,21 @@
   gtag('js', new Date());
 
   gtag('config', 'G-GE6EZ4BGZG');
+
+  function jumpNoOnTouch() {
+  const z = zone.getBoundingClientRect();
+  const b = noBtn.getBoundingClientRect();
+
+  const newLeft = Math.random() * (z.width - b.width);
+  const newTop  = Math.random() * (z.height - b.height);
+
+  noBtn.style.left = newLeft + "px";
+  noBtn.style.top  = newTop + "px";
+  noBtn.style.transform = "none";
+
+  growYes();
+}
+  
 </script>
   
   <meta charset="UTF-8" />
@@ -325,6 +340,11 @@
 
     noBtn.addEventListener("click", e => e.preventDefault());
 
+    noBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      jumpNoOnTouch();
+    }, { passive: false });
+
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
       zone.style.display = "none";
@@ -365,6 +385,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
