@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GE6EZ4BGZG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-GE6EZ4BGZG');
-</script>
-  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Sup</title>
@@ -137,10 +127,6 @@
       transition: transform .12s ease, background .12s ease;
     }
 
-    #noBtn {
-      position: absolute;
-    }
-
     #yesBtn {
       left: 18%;
       background: var(--yes);
@@ -193,7 +179,7 @@
     <input
       id="passwordInput"
       type="password"
-      placeholder="MMDDYY"
+      placeholder="MMDD"
     />
     <button id="unlockBtn">Enter</button>
   </div>
@@ -224,9 +210,9 @@
     <section class="result" id="result">
       <h2>YAY! 🎉</h2>
       <img
-        class="believe"
-        src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExajBjdG5tN2g5aGt6dWJ4MHJ6MnVlMm84NTF2YTdvd2VtOXo4amc4dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/11JlMTkRHvrbObth0x/giphy.gif"
-        alt="Believe"
+        class="fireworks"
+        src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+        alt="Fireworks"
       />
     </section>
   </main>
@@ -290,64 +276,13 @@
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
-    function getMobileBounds() {
-      const rect = zone.getBoundingClientRect();
-    
-      const safeTop = Math.max(120, rect.top - 120);
-      const safeBottom = Math.min(
-        window.innerHeight - 100,
-        rect.bottom + 200
-      );
-    
-      const safeLeft = 16;
-      const safeRight = window.innerWidth - 16;
-    
-      return {
-        minX: safeLeft,
-        maxX: safeRight,
-        minY: safeTop,
-        maxY: safeBottom
-      };
-    }
-    let escapeCount = 0;
-
-    function jumpNoRandomly() {
-      const b = noBtn.getBoundingClientRect();
-      const bounds = getMobileBounds();
-    
-      escapeCount++;
-    
-      const maxX = bounds.maxX - b.width;
-      const maxY = bounds.maxY - b.height;
-    
-      const minX = bounds.minX;
-      const minY = bounds.minY;
-    
-      const newLeft =
-        minX + Math.random() * (maxX - minX);
-    
-      const newTop =
-        minY + Math.random() * (maxY - minY);
-    
-      noBtn.style.left = newLeft + "px";
-      noBtn.style.top = newTop + "px";
-      noBtn.style.transform = "none";
-    
-      growYes();
-    }
-
     /* ---------- NO BUTTON RUNS AWAY ---------- */
     function clamp(n, min, max) {
       return Math.max(min, Math.min(max, n));
     }
 
     function moveNo(px, py) {
-      const z = {
-        left: 24,
-        top: 24,
-        width: window.innerWidth - 48,
-        height: window.innerHeight - 48
-      };
+      const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
 
       let dx = (b.left + b.width / 2) - px;
@@ -368,26 +303,17 @@
 
       growYes();
     }
-    
-    if (window.matchMedia("(hover: hover)").matches) {
-      zone.addEventListener("pointermove", e => {
-        const b = noBtn.getBoundingClientRect();
-        const d = Math.hypot(
-          (b.left + b.width / 2) - e.clientX,
-          (b.top + b.height / 2) - e.clientY
-        );
-        if (d < 140) moveNo(e.clientX, e.clientY);
-      });
-    }
+
+    zone.addEventListener("pointermove", e => {
+      const b = noBtn.getBoundingClientRect();
+      const d = Math.hypot(
+        (b.left + b.width / 2) - e.clientX,
+        (b.top + b.height / 2) - e.clientY
+      );
+      if (d < 140) moveNo(e.clientX, e.clientY);
+    });
 
     noBtn.addEventListener("click", e => e.preventDefault());
-
-    noBtn.addEventListener("touchstart", e => {
-      e.preventDefault();
-      jumpNoRandomly();
-    }, { passive: false });
-
-    noBtn.addEventListener("touchend", e => e.preventDefault());
 
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
@@ -398,7 +324,7 @@
       fullScreenConfetti();
     });
 
-const correctPassword = "061981";
+const correctPassword = "0619";
 
 const lockScreen = document.getElementById("lockScreen");
 const mainContent = document.getElementById("mainContent");
@@ -407,14 +333,7 @@ const unlockBtn = document.getElementById("unlockBtn");
 const errorMsg = document.getElementById("errorMsg");
 
 unlockBtn.addEventListener("click", () => {
-  if (passwordInput.value.trim() === correctPassword) {
-
-    //Log successful unlock to Google Analytics
-    gtag('event', 'unlock_success', {
-      event_category: 'engagement',
-      event_label: 'birthday_correct'
-    });
-
+  if (passwordInput.value === correctPassword) {
     lockScreen.style.display = "none";
     mainContent.style.display = "block";
   } else {
@@ -429,12 +348,6 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
-
-
-
-
-
-
 
 
 
