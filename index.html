@@ -137,6 +137,10 @@
       transition: transform .12s ease, background .12s ease;
     }
 
+    #noBtn {
+      position: fixed;
+    }
+
     #yesBtn {
       left: 18%;
       background: var(--yes);
@@ -287,16 +291,20 @@
     }
 
     function jumpNoRandomly() {
-      const z = zone.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
     
-      const newLeft = Math.random() * (z.width - b.width);
-      const newTop  = Math.random() * (z.height - b.height);
+      const padding = 20;
+    
+      const maxX = window.innerWidth - b.width - padding;
+      const maxY = window.innerHeight - b.height - padding;
+    
+      const newLeft = Math.random() * maxX;
+      const newTop  = Math.random() * maxY;
     
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
       noBtn.style.transform = "none";
-
+    
       growYes();
     }
 
@@ -306,7 +314,7 @@
     }
 
     function moveNo(px, py) {
-      const z = zone.getBoundingClientRect();
+      const z = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
       const b = noBtn.getBoundingClientRect();
 
       let dx = (b.left + b.width / 2) - px;
@@ -386,6 +394,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
