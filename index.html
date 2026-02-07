@@ -294,27 +294,21 @@
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
-
     function jumpNoRandomly() {
       const card = mainContent.getBoundingClientRect();
-      const button = noBtn.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
     
-      const padding = 16;
+      const minX = 24;
+      const maxX = card.width - b.width - 24;
     
-      const minX = padding;
-      const maxX = card.width - button.width - padding;
-    
-      const minY = padding;
-      const maxY = card.height - button.height - padding;
+      const minY = 120;
+      const maxY = card.height - b.height - 40;
     
       const newLeft = minX + Math.random() * (maxX - minX);
       const newTop  = minY + Math.random() * (maxY - minY);
     
       noBtn.style.left = newLeft + "px";
       noBtn.style.top  = newTop + "px";
-      noBtn.style.transform = "none";
-    
-      growYes();
     }
 
     /* ---------- NO BUTTON RUNS AWAY ---------- */
@@ -410,6 +404,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
