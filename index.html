@@ -286,6 +286,20 @@
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
+    function jumpNoRandomly() {
+      const z = zone.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
+    
+      const newLeft = Math.random() * (z.width - b.width);
+      const newTop  = Math.random() * (z.height - b.height);
+    
+      noBtn.style.left = newLeft + "px";
+      noBtn.style.top = newTop + "px";
+      noBtn.style.transform = "none";
+
+      growYes();
+    }
+
     /* ---------- NO BUTTON RUNS AWAY ---------- */
     function clamp(n, min, max) {
       return Math.max(min, Math.min(max, n));
@@ -324,6 +338,13 @@
     });
 
     noBtn.addEventListener("click", e => e.preventDefault());
+
+    noBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      jumpNoRandomly();
+    }, { passive: false });
+
+    noBtn.addEventListener("touchend", e => e.preventDefault());
 
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
@@ -365,6 +386,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
