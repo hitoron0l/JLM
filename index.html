@@ -315,6 +315,20 @@
       growYes();
     }
 
+    function jumpNoRandomly() {
+      const z = zone.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
+    
+      const newLeft = Math.random() * (z.width - b.width);
+      const newTop  = Math.random() * (z.height - b.height);
+    
+      noBtn.style.left = newLeft + "px";
+      noBtn.style.top = newTop + "px";
+      noBtn.style.transform = "none";
+    
+      growYes();
+    }
+
     zone.addEventListener("pointermove", e => {
       const b = noBtn.getBoundingClientRect();
       const d = Math.hypot(
@@ -326,6 +340,11 @@
 
     noBtn.addEventListener("click", e => e.preventDefault());
 
+    noBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      jumpNoRandomly();
+    }, { passive: false });
+    noBtn.addEventListener("touchend", e => e.preventDefault());
 
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
@@ -367,6 +386,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
