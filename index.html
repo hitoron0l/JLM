@@ -137,6 +137,10 @@
       transition: transform .12s ease, background .12s ease;
     }
 
+    #mainContent {
+      position: relative;
+    } 
+    
     #noBtn {
       position: absolute;
     }
@@ -290,47 +294,24 @@
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
-    function getMobileBounds() {
-      const rect = zone.getBoundingClientRect();
-    
-      const safeTop = Math.max(120, rect.top - 120);
-      const safeBottom = Math.min(
-        window.innerHeight - 100,
-        rect.bottom + 200
-      );
-    
-      const safeLeft = 16;
-      const safeRight = window.innerWidth - 16;
-    
-      return {
-        minX: safeLeft,
-        maxX: safeRight,
-        minY: safeTop,
-        maxY: safeBottom
-      };
-    }
-    let escapeCount = 0;
 
     function jumpNoRandomly() {
-      const b = noBtn.getBoundingClientRect();
-      const bounds = getMobileBounds();
+      const card = mainContent.getBoundingClientRect();
+      const button = noBtn.getBoundingClientRect();
     
-      escapeCount++;
+      const padding = 16;
     
-      const maxX = bounds.maxX - b.width;
-      const maxY = bounds.maxY - b.height;
+      const minX = padding;
+      const maxX = card.width - button.width - padding;
     
-      const minX = bounds.minX;
-      const minY = bounds.minY;
+      const minY = padding;
+      const maxY = card.height - button.height - padding;
     
-      const newLeft =
-        minX + Math.random() * (maxX - minX);
-    
-      const newTop =
-        minY + Math.random() * (maxY - minY);
+      const newLeft = minX + Math.random() * (maxX - minX);
+      const newTop  = minY + Math.random() * (maxY - minY);
     
       noBtn.style.left = newLeft + "px";
-      noBtn.style.top = newTop + "px";
+      noBtn.style.top  = newTop + "px";
       noBtn.style.transform = "none";
     
       growYes();
@@ -429,6 +410,7 @@ passwordInput.addEventListener("keydown", e => {
   </script>
 </body>
 </html>
+
 
 
 
