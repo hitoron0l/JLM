@@ -132,7 +132,26 @@
 <body>
   <canvas id="confettiCanvas"></canvas>
 
-  <main class="card">
+<div class="card" id="lockScreen">
+  <h1>Enter password</h1>
+  <input
+    id="passwordInput"
+    type="password"
+    placeholder="Password"
+    style="padding:14px 18px; font-size:18px; border-radius:999px; border:1px solid #ccc; width:80%; max-width:280px;"
+  />
+  <br /><br />
+  <button id="unlockBtn" style="background:var(--yes); color:#fff;">
+    Enter
+  </button>
+  <div class="hint" id="errorMsg" style="display:none; color:#c02626;">
+    Incorrect password
+  </div>
+</div>
+
+
+  
+  <main class="card" id="mainContent" style="display:none;">
     <!-- ANIMAL WITH HEART -->
 <img class="art" src="bison.png" alt="Bison" />
 <img class="art" src="orca.png" alt="Orca with heart balloon" />
@@ -263,9 +282,32 @@
       resizeConfettiCanvas();
       fullScreenConfetti();
     });
+
+const correctPassword = "0619";
+
+const lockScreen = document.getElementById("lockScreen");
+const mainContent = document.getElementById("mainContent");
+const passwordInput = document.getElementById("passwordInput");
+const unlockBtn = document.getElementById("unlockBtn");
+const errorMsg = document.getElementById("errorMsg");
+
+unlockBtn.addEventListener("click", () => {
+  if (passwordInput.value === correctPassword) {
+    lockScreen.style.display = "none";
+    mainContent.style.display = "block";
+  } else {
+    errorMsg.style.display = "block";
+  }
+});
+
+passwordInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") unlockBtn.click();
+});
+    
   </script>
 </body>
 </html>
+
 
 
 
